@@ -21,8 +21,6 @@ function createNounfinder(opts) {
     memoizeServerPort: opts.memoizeServerPort || undefined
   });
 
-  var frequenciesForNouns = {};
-
   function getNounsFromText(text, done) {
     var emojiNouns = _.uniq(getEmojiFromText(text));
     var nonEmojiText = _.without(text.split(''), emojiNouns).join('');
@@ -68,17 +66,6 @@ function createNounfinder(opts) {
       return nouns[index];
     }
 
-    var nounsWithKnownFrequencies = 
-      _.intersection(_.keys(frequenciesForNouns), nouns);
-
-    var interestingNouns = _.compact(_.map(nounsWithKnownFrequencies, 
-      function getNounIfFreqIsUnderMax(freq, noun) {
-        return (freq < maxFrequency) ? noun : undefined;
-      }
-    ));
-
-    nouns = _.without.apply(_, [nouns].concat(interestingNouns));
-
     var emojiNouns = nouns.filter(isEmoji)
       .filter(emojiSource.emojiValueIsOKAsATopic);
 
@@ -86,23 +73,19 @@ function createNounfinder(opts) {
       return !isEmoji(noun);
     });
 
-    wordnok.getWordFrequencies(nouns,
-      function filterByFrequency(error, frequencies) {
-        if (error) {
-          done(error, interestingNouns);
-        }
-        else {
-          var indexesOfFreqsUnderMax = frequencies.reduce(addIndexIfUnder, []);
-          var foundNouns = indexesOfFreqsUnderMax.map(nounAtIndex);
-          interestingNouns = interestingNouns.concat(foundNouns);
+    wordnok.getWordFrequencies(nouns, filterByFrequency);
 
-          frequencies.forEach(function saveFreqForNoun(freq, i) {
-            frequenciesForNouns[nouns[i]] = freq;
-          });
-          done(null, interestingNouns.concat(emojiNouns));
-        }
+    function filterByFrequency(error, frequencies) {
+      if (error) {
+        done(error);
       }
-    );
+      else {
+        var indexesOfFreqsUnderMax = frequencies.reduce(addIndexIfUnder, []);
+        var foundNouns = indexesOfFreqsUnderMax.map(nounAtIndex);
+
+        done(null, foundNouns.concat(emojiNouns));
+      }
+    }
   }
 
   function addIndexIfFreqIsUnderMax(maxFreq, indexesUnderMax, freq, index) {

@@ -264,18 +264,7 @@ suite('Noun frequencies', function frequenciesSuite() {
     }
     var q = queue(1);
     textsAndNouns.forEach(addFilterTest);
-
-    // Add an extra run to exercise the cache.
-    addFilterTest(textsAndNouns[1]);
     
     q.awaitAll(testDone);
   });
-
-  test('Check frequency cache.', function testFrequencyCache() {
-    console.log(nounfinder.getFrequenciesForCachedNouns());
-    assert.deepEqual(nounfinder.getFrequenciesForCachedNouns(), 
-      expectedNounCache
-    );
-  });
-
 });
