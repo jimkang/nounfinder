@@ -39,20 +39,27 @@ function createNounfinder(opts) {
     var nouns = _.intersection(nounCache, words);
     words = _.without.apply(_, [words].concat(nouns));
 
-    wordnok.getPartsOfSpeechForMultipleWords(
-      words,
-      function filterToNouns(error, partsOfSpeech) {
-        if (!error) {
-          var newNouns = (words.filter(function couldBeNoun(word, i) {
-            return (partsOfSpeech[i].indexOf('noun') !== -1);
-          }));
-          nouns = nouns.concat(newNouns);
-          nounCache = nounCache.concat(newNouns);
-        }
-        
-        done(error, nouns.concat(emojiNouns));
+    wordnok.getPartsOfSpeechForMultipleWords(words, filterToNouns);
+
+    function filterToNouns(error, partsOfSpeech) {
+      function couldBeNoun(word, i) {
+        return partsOfSpeech.length > i &&
+          typeof partsOfSpeech[i].indexOf === 'function' &&
+          partsOfSpeech[i].indexOf('noun') !== -1;
       }
-    );
+
+      if (!error) {
+        var newNouns = [];
+        if (Array.isArray(partsOfSpeech)) {
+          newNouns = words.filter(couldBeNoun);
+        }
+
+        nouns = nouns.concat(newNouns);
+        nounCache = nounCache.concat(newNouns);
+      }
+
+      done(error, nouns.concat(emojiNouns));
+    }
   }
 
   function getSingularFormsOfWords(words) {
