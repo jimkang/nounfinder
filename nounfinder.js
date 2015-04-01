@@ -21,7 +21,6 @@ function createNounfinder(opts) {
     memoizeServerPort: opts.memoizeServerPort || undefined
   });
 
-  var nounCache = [];
   var frequenciesForNouns = {};
 
   function getNounsFromText(text, done) {
@@ -35,10 +34,6 @@ function createNounfinder(opts) {
     words = words.filter(wordIsNotANumeral);
     words = words.filter(wordIsNotACardinalNumber);
 
-    // Get already-looked-up nouns from cache.
-    var nouns = _.intersection(nounCache, words);
-    words = _.without.apply(_, [words].concat(nouns));
-
     wordnok.getPartsOfSpeechForMultipleWords(words, filterToNouns);
 
     function filterToNouns(error, partsOfSpeech) {
@@ -49,13 +44,10 @@ function createNounfinder(opts) {
       }
 
       if (!error) {
-        var newNouns = [];
+        var nouns = [];
         if (Array.isArray(partsOfSpeech)) {
-          newNouns = words.filter(couldBeNoun);
+          nouns = words.filter(couldBeNoun);
         }
-
-        nouns = nouns.concat(newNouns);
-        nounCache = nounCache.concat(newNouns);
       }
 
       done(error, nouns.concat(emojiNouns));
@@ -154,11 +146,6 @@ function createNounfinder(opts) {
     return word.length > 1;
   }
 
-  // TODO: nounCache should be in recordkeeper.
-  function getNounCache() {
-    return nounCache;
-  }
-
   function getFrequenciesForCachedNouns() {
     return frequenciesForNouns;
   }
@@ -202,7 +189,6 @@ function createNounfinder(opts) {
   return {
     getNounsFromText: getNounsFromText,
     filterNounsForInterestingness: filterNounsForInterestingness,
-    getNounCache: getNounCache,
     getFrequenciesForCachedNouns: getFrequenciesForCachedNouns
   };
 }

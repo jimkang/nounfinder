@@ -228,7 +228,7 @@ suite('Noun getting', function gettingSuite() {
     nounfinder.getNounsFromText(text,
       function checkNouns(error, nouns) {
         assert.ok(!error);
-        assert.deepEqual(nouns, expectedNouns);
+        assert.deepEqual(nouns.sort(), expectedNouns.sort());
         done(error, nouns)
       }
     );
@@ -241,11 +241,6 @@ suite('Noun getting', function gettingSuite() {
     });
     q.awaitAll(testDone);
   });
-
-  test('Check noun cache.', function testNounCache() {
-    assert.deepEqual(nounfinder.getNounCache(), Object.keys(expectedNounCache));
-  });
-
 });
 
 suite('Noun frequencies', function frequenciesSuite() {
@@ -255,7 +250,7 @@ suite('Noun frequencies', function frequenciesSuite() {
     nounfinder.filterNounsForInterestingness(nouns, 100,
       function checkNouns(error, filteredNouns) {
         assert.ok(!error);
-        assert.deepEqual(filteredNouns, expectedNouns);
+        assert.deepEqual(filteredNouns.sort(), expectedNouns.sort());
         done(error, filteredNouns)
       }
     );
