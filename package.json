@@ -1,6 +1,6 @@
 {
   "name": "nounfinder",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Extracts nouns from chunks of text, using the [Wordnik API](http://developer.wordnik.com/docs.html).",
   "main": "nounfinder.js",
   "scripts": {
@@ -33,6 +33,6 @@
     "iscool": "^1.0.1",
     "lodash": "^2.4.1",
     "mocha": "^2.1.0",
-    "wordnok": "^2.2.1"
+    "wordnok": "^2.3.1"
   }
 }
