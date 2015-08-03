@@ -18,7 +18,8 @@ function createNounfinder(opts) {
   var wordnok = createWordnok({
     apiKey: opts.wordnikAPIKey,
     logger: opts.logger || console,
-    memoizeServerPort: opts.memoizeServerPort || undefined
+    memoizeServerPort: opts.memoizeServerPort || undefined,
+    onDisconnect: opts.onDisconnect || undefined
   });
 
   function getNounsFromText(text, done) {
