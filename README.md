@@ -3,6 +3,8 @@ nounfinder
 
 Extracts nouns from chunks of text, using the [Wordnik API](http://developer.wordnik.com/docs.html).
 
+In version 2.0+, it's more strict. If a word has multiple uses, it only counts word as a noun if the most common usage (according to Wordnik) is as a noun.
+
 Installation
 ------------
 

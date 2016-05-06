@@ -6,6 +6,8 @@ var cardinalNumbers = require('./cardinalnumbers');
 var isEmoji = require('is-emoji');
 var emojiSource = require('emojisource');
 
+var nounFamily = ['noun', 'pronoun'];
+
 var isCool = createIsCool({
   logger: console
 });
@@ -26,7 +28,7 @@ function createNounfinder(opts) {
     var emojiNouns = _.uniq(getEmojiFromText(text));
     var nonEmojiText = _.without(text.split(''), emojiNouns).join('');
 
-    var words = getSingularFormsOfWords(worthwhileWordsFromText(nonEmojiText));
+    var words = worthwhileWordsFromText(nonEmojiText);
     words = _.uniq(words.map(function lower(s) { return s.toLowerCase(); }));
     words = words.filter(wordIsCorrectLength);
     words = words.filter(isCool);
@@ -37,9 +39,23 @@ function createNounfinder(opts) {
 
     function filterToNouns(error, partsOfSpeech) {
       function couldBeNoun(word, i) {
-        return partsOfSpeech.length > i &&
-          typeof partsOfSpeech[i].indexOf === 'function' &&
-          partsOfSpeech[i].indexOf('noun') !== -1;
+        var couldBe = false;
+
+        if (partsOfSpeech.length < 1) {
+          // If there's no parts of speech, we'll assume it's a new weird noun Wordnik
+          // doesn't know.
+          couldBe = true;
+        }
+        // But if the partsOfSpeech has a list of parts of speech for this word
+        // and that list has at least one element...
+        else if (partsOfSpeech[i].length > 0 &&
+          // ...and the first element (the most common usage for the word) has a part of
+          // part of speech in the noun family (nouns, pronouns), then we'll count it as a noun.
+          nounFamily.indexOf(partsOfSpeech[i][0]) !== -1) {
+
+          couldBe = true;
+        }
+        return couldBe;
       }
 
       if (!error) {
@@ -49,15 +65,17 @@ function createNounfinder(opts) {
         }
       }
 
-      done(error, nouns.concat(emojiNouns));
+      done(error, getSingularFormsOfWords(nouns).concat(emojiNouns));
     }
   }
 
   function getSingularFormsOfWords(words) {
-    return words.map(function getSingular(word) {
-      var forms = canonicalizer.getSingularAndPluralForms(word);
-      return forms[0];
-    });
+    return words.map(getSingular);
+  }
+
+function getSingular(word) {
+    var forms = canonicalizer.getSingularAndPluralForms(word);
+    return forms[0];
   }
 
   function filterNounsForInterestingness(nouns, maxFrequency, done) {
@@ -115,11 +133,11 @@ function createNounfinder(opts) {
   }
 
   function wordIsNotANumeral(word) {
-    return isNaN(+word);
+    return isNaN(+getSingular(word));
   }
 
   function wordIsNotACardinalNumber(word) {
-    return cardinalNumbers.indexOf(word) === -1;
+    return cardinalNumbers.indexOf(getSingular(word)) === -1;
   }
 
   function wordIsCorrectLength(word) {

@@ -12,16 +12,17 @@ var textsAndNouns = [
     text: 'Facebook running studies to see if it can manipulate users\' emotional states by skewing their feeds.', 
     nouns: [
       'facebook',
+      'it',
       'running',
-      'study',
-      'user',
-      'state'
+      'state',
+      'feed'
     ],
     interestingNouns: []
   },
   {
     text: 'During this work, the street will be closed to motorists, except for abutters.', 
     nouns: [
+      'this',
       'work',
       'street',
       'will',
@@ -49,13 +50,13 @@ var textsAndNouns = [
   {
     text: 'In addition to the street closure, there will be no parking on either side of the street.', 
     nouns: [
-      'street',
-      'will',
       'addition',
+      'street',
       'closure',
-      'no',
+      'will',
       'parking',
-      'side'
+      'either',
+      'side' 
     ],
     interestingNouns: [
       'closure'
@@ -64,11 +65,11 @@ var textsAndNouns = [
   {
     text: 'If voting didn\'t matter Republicans wouldn\'t be trying so hard to stop people from doing it.', 
     nouns: [
-      'voting',
       'matter',
       'republican',
       'person',
-      'doing'
+      'doing',
+      'it'
     ],
     interestingNouns: [
       'republican'
@@ -77,10 +78,10 @@ var textsAndNouns = [
   {
     text: 'Hello, dystopia. You\'re a little early, but I\'ve been expecting you.',
     nouns: [
-      'hello'
+      'dystopium',
+      'you'
     ],
     interestingNouns: [
-      'hello'
     ]
   },
   {
@@ -93,7 +94,8 @@ var textsAndNouns = [
       'poll',
       'dude',
       // 'forties'
-      // Should leave out v and forties.
+      // Should leave out v and forties.,
+      'they'
     ],
     interestingNouns: [
       'stripe',
@@ -112,7 +114,8 @@ var textsAndNouns = [
       'poll',
       'dude',
       // '40s'
-      // Should leave out v and 40.
+      // Should leave out v and 40.,
+      'they'
     ],
     interestingNouns: [
       'stripe',
@@ -124,8 +127,7 @@ var textsAndNouns = [
   {
     text: 'PLS don\'t use pls in an exhortation',
     nouns: [
-      'don\'t',
-      'exhortation',
+      'exhortation'
     ],
     interestingNouns: [
       'exhortation'
@@ -136,6 +138,7 @@ var textsAndNouns = [
     nouns: [
       'capitalism',
       'ruin',
+      'everything',
       'going',
       'bed'
     ],
