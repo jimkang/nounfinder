@@ -27,8 +27,20 @@ function createNounfinder(opts) {
   function getNounsFromText(text, done) {
     var emojiNouns = _.uniq(getEmojiFromText(text));
     var nonEmojiText = _.without(text.split(''), emojiNouns).join('');
+    getNounsFromWords(wordsFromText(nonEmojiText), addEmojiNouns);
 
-    var words = worthwhileWordsFromText(nonEmojiText);
+    function addEmojiNouns(error, nouns) {
+      if (error) {
+        done(error);
+      }
+      else {
+        done(null, nouns.concat(emojiNouns));
+      }
+    }
+  }
+
+  function getNounsFromWords(incomingWords, done) {
+    var words = getWorthwhileWordsFromList(incomingWords);
     words = _.uniq(words.map(function lower(s) { return s.toLowerCase(); }));
     words = words.filter(wordIsCorrectLength);
     words = words.filter(isCool);
@@ -65,7 +77,7 @@ function createNounfinder(opts) {
         }
       }
 
-      done(error, getSingularFormsOfWords(nouns).concat(emojiNouns));
+      done(error, getSingularFormsOfWords(nouns));
     }
   }
 
@@ -114,10 +126,13 @@ function getSingular(word) {
     return indexesUnderMax;
   }
 
-  function worthwhileWordsFromText(text) {
+  function wordsFromText(text) {
     var words = text.split(/[ ":.,;!?#]/);
+    return _.compact(words);
+  }
+
+  function getWorthwhileWordsFromList(words) {
     var filteredWords = [];
-    words = _.compact(words);
     if (words.length > 0) {
       filteredWords = words.filter(isWorthCheckingForNounHood);
     }
@@ -190,6 +205,7 @@ function getSingular(word) {
 
   return {
     getNounsFromText: getNounsFromText,
+    getNounsFromWords: getNounsFromWords,
     filterNounsForInterestingness: filterNounsForInterestingness,
     getFrequenciesForCachedNouns: getFrequenciesForCachedNouns
   };

@@ -24,8 +24,10 @@
   },
   "homepage": "https://github.com/jimkang/nounfinder",
   "devDependencies": {
+    "assert-no-error": "^1.0.0",
     "mocha": "^2.4.5",
-    "queue-async": "^1.0.7"
+    "queue-async": "^1.0.7",
+    "tape": "^4.6.2"
   },
   "dependencies": {
     "canonicalizer": "^1.0.1",
