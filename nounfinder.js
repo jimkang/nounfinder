@@ -8,9 +8,7 @@ var emojiSource = require('emojisource');
 
 var nounFamily = ['noun', 'pronoun'];
 
-var isCool = createIsCool({
-  logger: console
-});
+var isCool = createIsCool();
 
 function createNounfinder(opts) {
   if (!opts || !opts.wordnikAPIKey) {
