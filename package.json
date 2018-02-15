@@ -1,6 +1,6 @@
 {
   "name": "nounfinder",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "Extracts nouns from chunks of text, using the [Wordnik API](http://developer.wordnik.com/docs.html).",
   "main": "nounfinder.js",
   "scripts": {
