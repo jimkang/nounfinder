@@ -1,4 +1,4 @@
-MOCHA = node_modules/mocha/bin/MOCHA
+MOCHA = node_modules/.bin/mocha
 
 test:
 	$(MOCHA) --ui tdd tests/nounfinder-tests.js
