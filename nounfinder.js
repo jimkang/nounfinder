@@ -12,7 +12,7 @@ var isCool = createIsCool();
 
 function createNounfinder(opts) {
   if (!opts || !opts.wordnikAPIKey) {
-    throw new Error('Cannot created nounfinder without opts.wordnikAPIKey');
+    throw new Error('Cannot create nounfinder without opts.wordnikAPIKey');
   }
 
   var wordnok = createWordnok({
@@ -30,8 +30,7 @@ function createNounfinder(opts) {
     function addEmojiNouns(error, nouns) {
       if (error) {
         done(error);
-      }
-      else {
+      } else {
         done(null, nouns.concat(emojiNouns));
       }
     }
@@ -39,7 +38,11 @@ function createNounfinder(opts) {
 
   function getNounsFromWords(incomingWords, done) {
     var words = getWorthwhileWordsFromList(incomingWords);
-    words = _.uniq(words.map(function lower(s) { return s.toLowerCase(); }));
+    words = _.uniq(
+      words.map(function lower(s) {
+        return s.toLowerCase();
+      })
+    );
     words = words.filter(wordIsCorrectLength);
     words = words.filter(isCool);
     words = words.filter(wordIsNotANumeral);
@@ -58,16 +61,16 @@ function createNounfinder(opts) {
         }
         // But if the partsOfSpeech has a list of parts of speech for this word
         // and that list has at least one element...
-        else if (partsOfSpeech[i].length > 0 &&
+        else if (
+          partsOfSpeech[i].length > 0 &&
           // ...and the first element (the most common usage for the word) has a part of
           // part of speech in the noun family (nouns, pronouns), then we'll count it as a noun.
-          nounFamily.indexOf(partsOfSpeech[i][0]) !== -1) {
-
+          nounFamily.indexOf(partsOfSpeech[i][0]) !== -1
+        ) {
           couldBe = true;
         }
         return couldBe;
       }
-
       if (!error) {
         var nouns = [];
         if (Array.isArray(partsOfSpeech)) {
@@ -83,7 +86,7 @@ function createNounfinder(opts) {
     return words.map(getSingular);
   }
 
-function getSingular(word) {
+  function getSingular(word) {
     var forms = canonicalizer.getSingularAndPluralForms(word);
     return forms[0];
   }
@@ -95,7 +98,8 @@ function getSingular(word) {
       return nouns[index];
     }
 
-    var emojiNouns = nouns.filter(isEmoji)
+    var emojiNouns = nouns
+      .filter(isEmoji)
       .filter(emojiSource.emojiValueIsOKAsATopic);
 
     nouns = nouns.filter(function isNotEmoji(noun) {
@@ -107,8 +111,7 @@ function getSingular(word) {
     function filterByFrequency(error, frequencies) {
       if (error) {
         done(error);
-      }
-      else {
+      } else {
         var indexesOfFreqsUnderMax = frequencies.reduce(addIndexIfUnder, []);
         var foundNouns = indexesOfFreqsUnderMax.map(nounAtIndex);
 
@@ -161,10 +164,6 @@ function getSingular(word) {
     return word.length > 1;
   }
 
-  function getFrequenciesForCachedNouns() {
-    return frequenciesForNouns;
-  }
-
   // From http://crocodillon.com/blog/parsing-emoji-unicode-in-javascript.
   var emojiSurrogateRangeDefs = [
     {
@@ -183,9 +182,11 @@ function getSingular(word) {
 
   function isEmojiSurrogatePair(leadChar, trailingChar) {
     return emojiSurrogateRangeDefs.some(function charCodeIsInRange(rangeDef) {
-      return leadChar === rangeDef.lead &&
+      return (
+        leadChar === rangeDef.lead &&
         trailingChar >= rangeDef.trailRange[0] &&
-        trailingChar <= rangeDef.trailRange[1];
+        trailingChar <= rangeDef.trailRange[1]
+      );
     });
   }
 
@@ -202,10 +203,9 @@ function getSingular(word) {
   }
 
   return {
-    getNounsFromText: getNounsFromText,
-    getNounsFromWords: getNounsFromWords,
-    filterNounsForInterestingness: filterNounsForInterestingness,
-    getFrequenciesForCachedNouns: getFrequenciesForCachedNouns
+    getNounsFromText,
+    getNounsFromWords,
+    filterNounsForInterestingness
   };
 }
 

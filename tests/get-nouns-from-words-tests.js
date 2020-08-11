@@ -5,6 +5,20 @@ var assertNoError = require('assert-no-error');
 
 var testCases = [
   {
+    // Words that godtributes shouldn't have used as nouns.
+    words: [
+      'dossed',
+      'unbreated',
+      'limitedly',
+      'mouthed',
+      'wouldn\'t',
+      'pied',
+      'unpampered',
+      'tallish'
+    ],
+    expected: []
+  },
+  {
     words: [
       'Facebook',
       'running',
@@ -21,15 +35,9 @@ var testCases = [
       'by',
       'skewing',
       'their',
-      'feeds'    
+      'feeds'
     ],
-    expected: [
-      'facebook',
-      'running',
-      'it',
-      'state',
-      'feed'
-    ]
+    expected: ['facebook', 'running', 'it', 'state', 'feed']
   },
   {
     words: [
@@ -45,10 +53,7 @@ var testCases = [
       'expecting',
       'you'
     ],
-    expected: [
-      'dystopium',
-      'you'
-    ]
+    expected: ['dystopium', 'you']
   },
   {
     words: [
@@ -60,15 +65,9 @@ var testCases = [
       'i’m',
       'going',
       'to',
-      'bed',
+      'bed'
     ],
-    expected: [
-      'capitalism',
-      'ruin',
-      'everything',
-      'going',
-      'bed'    
-    ]
+    expected: ['capitalism', 'ruin', 'everything', 'going', 'bed']
   }
 ];
 
